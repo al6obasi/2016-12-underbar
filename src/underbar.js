@@ -281,22 +281,20 @@ for (var i = 0; i < collection.length; i++) {
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
-        var obj1=arguments[0]; // {a:1,b:2}
-       for (var i = 0; i < arguments.length; i++) {
-          for ( var k in arguments[i]){
-            if(obj1.hasOwnProperty("key") === false){
-              obj1.k=arguments[i][k]
 
-          }
+_.defaults = function(obj) {
+       var obj1=arguments[0]; // {a:1,b:2}
+      for (var i = 0; i < arguments.length; i++) {
+         for ( var k in arguments[i]){
+           if(obj1.hasOwnProperty(k) === false){
+             obj1[k]=arguments[i][k]
 
-        }
-        }
-        return obj1;
-        }
+         }
 
-
-
+       }
+       }
+       return obj1;
+       }
 
 
     // for (var i = 1; i < arguments.length; i++) {
@@ -318,6 +316,7 @@ for (var i = 0; i < collection.length; i++) {
    * Now we're getting into function decorators, which take in any function
    * and return out a new version of the function that works somewhat differently
    */
+
 
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
@@ -350,8 +349,18 @@ for (var i = 0; i < collection.length; i++) {
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {
-  };
+ _.memoize = function(func) {
+    var cache = {};
+    return function(){
+        var y = JSON.stringify(arguments)
+        if(cache[y] === undefined){
+          return cache[y]= func.apply(this, arguments);
+        }
+        else {
+          return cache[y];
+        }
+      }
+}
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -360,7 +369,15 @@ for (var i = 0; i < collection.length; i++) {
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var arr=Array.from(arguments);
+    arr.splice(0,2);
+    var z;
+    return setInterval(function(){
+      z=func.apply(this,arr)}
+      ,wait);
+
   };
+
 
 
   /**
@@ -374,7 +391,23 @@ for (var i = 0; i < collection.length; i++) {
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-  };
+    var newArr=[]
+    var temp;
+    for (var i = 0; i < array.length; i++) {
+      if(newArr.length < array.length){
+     temp= array[i];
+     newArr[i]=array[i+1]
+     newArr[i+1]=temp;}
+     newArr[newArr.length-1]=array[0]
+
+
+    }
+return newArr;
+
+}
+
+
+
 
 
   /**
@@ -388,6 +421,19 @@ for (var i = 0; i < collection.length; i++) {
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+  var newArr=[];
+    if(typeof(functionOrKey) === 'string' ){
+         _.each(collection,function(el,i){
+     newArr.push(el[functionOrKey].apply(el,args))
+    })
+  }else{
+       _.each(collection,function(el,i){
+     newArr.push(functionOrKey.apply(el,args))
+
+    })
+  }
+return newArr
+
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -395,7 +441,31 @@ for (var i = 0; i < collection.length; i++) {
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var newArr=[];
+    if(typeof(iterator) === 'number'){
+    _.each(collection,function(obj,i){
+      for(var key in obj){
+        if(iterator === key){
+          newArr.push(obj[key])
+        }
+      }
+newArr.sort();
+
+    })
+    {else if(typeof (iterator) === 'string'){
+       _.each(collection,function(obj,i){
+      for(var key in obj){
+        if(iterator === key){
+          newArr.push(obj[key])
+        }
+      }
+  newArr.sort(function(a, b) {
+    return a - b;
+  });
+return newArr;
+
   };
+
 
   // Zip together two or more arrays with elements of the same index
   // going together.
