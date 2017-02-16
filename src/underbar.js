@@ -11,13 +11,6 @@
   };
 
   /**
-   * COLLECTIONS
-   * ===========
-   *
-   * In this section, we'll have a look at functions that operate on collections
-   * of values; in JavaScript, a 'collection' is something that can contain a
-   * number of values--either an array or an object.
-   *
    *
    * IMPORTANT NOTE!
    * ===========
